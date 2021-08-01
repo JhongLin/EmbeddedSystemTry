@@ -1,0 +1,104 @@
+#include<stdlib.h>
+#include<stdio.h>
+#include<time.h>
+#include<string.h>
+
+
+FILE* f;
+
+void ctz(){
+        char r0[100]="/sys/class/leds/beaglebone:green:usr0/brightness";
+        char r1[100]="/sys/class/leds/beaglebone:green:usr1/brightness";
+        char r2[100]="/sys/class/leds/beaglebone:green:usr2/brightness";
+        char r3[100]="/sys/class/leds/beaglebone:green:usr3/brightness";
+
+        f=fopen(r0,"w");
+        if(f==NULL)
+        exit(EXIT_FAILURE);
+        fprintf(f,"0");
+        fclose(f);
+
+        f=fopen(r1,"w");
+        if(f==NULL)
+        exit(EXIT_FAILURE);
+        fprintf(f,"0");
+        fclose(f);
+
+        f=fopen(r2,"w");
+        if(f==NULL)
+        exit(EXIT_FAILURE);
+        fprintf(f,"0");
+        fclose(f);
+
+        f=fopen(r3,"w");
+        if(f==NULL)
+        exit(EXIT_FAILURE);
+        fprintf(f,"0");
+        fclose(f);
+
+}
+
+
+void delay(int milliseconds);
+int main(int argc, char* argv[]){
+        ctz();
+        int st=1;
+        char a[2]="0", b[2]="1", c[2]="2", d[2]="3";
+        int i=0;
+        while(1){
+        char route1[100] = "/sys/class/leds/beaglebone:green:usr",
+             route2[100] = "/brightness";
+           //for Angstrom image (after June 2013)
+                switch(i){
+                        case 0:f=fopen( strcat(  strcat(route1,a), route2 ) ,"w"
+  );break;
+
+                        case 1:f=fopen( strcat(  strcat(route1,b), route2 ) ,"w"
+  );break;
+
+                        case 2:f=fopen( strcat(  strcat(route1,c), route2 ) ,"w"
+  );break;
+
+                        case 3:f=fopen( strcat(  strcat(route1,d), route2 ) ,"w"
+  );break;
+                        default:
+                               break;
+                }
+                if(f==NULL)
+                        exit(EXIT_FAILURE);
+                fprintf(f, "1");
+                fclose(f);
+                delay(1000);
+
+                //for Angstrom image (after June2013)
+                f = fopen( route1,"w"  );
+                if(f == NULL)
+                        exit(EXIT_FAILURE);
+                fprintf(f,"0");
+                fclose(f);
+
+                if(i==3)
+                st=0;
+                else if(i==0)
+                st=1;
+
+
+                if(st==1)
+                i++;
+                else
+                i--;
+
+
+        }
+                return EXIT_SUCCESS;
+}
+
+void delay(int milliseconds){
+        long pause;
+        clock_t now,then;
+
+        pause = milliseconds*(CLOCKS_PER_SEC/1000);
+        now = then = clock();
+        while( (now-then)<pause )
+                now = clock();
+}

@@ -1,0 +1,29 @@
+#include <msp430.h> 
+
+#define LED BIT0
+#define BUTTON BIT3
+
+/*
+ * main.c
+ */
+void main(void) {
+    
+    
+    WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
+
+    volatile unsigned i;
+    P1DIR |=LED;
+    P1REN = BUTTON;
+    P1OUT = BUTTON;
+    while(1)
+    {
+       while((P1IN & BUTTON)==0x00)
+       {
+           P1OUT ^= LED;
+          for(i=30000;i>0;i--);
+       }
+    }
+	
+	
+	
+}

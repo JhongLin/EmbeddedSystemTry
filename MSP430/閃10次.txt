@@ -1,0 +1,28 @@
+#include <msp430.h> 
+
+/*
+ * main.c
+ */
+void main(void) {
+    
+    
+    WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
+    P1OUT = BIT3;
+    P1DIR = BIT0;
+    P1REN = P1OUT;
+    char ledBlink;
+    unsigned int delayCount;
+    for(;;)
+    {
+        if ((P1IN & BIT3)==0)
+            for(ledBlink = 0;ledBlink <20;ledBlink++)
+            {
+                P1OUT ^= BIT0;
+                for (delayCount=0; delayCount<30000;delayCount++);
+            }
+    }
+    
+	
+	
+	
+}

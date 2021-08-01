@@ -1,0 +1,30 @@
+#include <msp430.h> 
+/*
+ * main.c
+ */
+#define RedLED BIT0
+#define Button BIT3
+ 
+void main(void) {
+    
+    
+  
+WDTCTL = WDTPW|WDTHOLD;
+P1DIR = RedLED;//P1REN= Button;
+P1OUT= Button;
+P1IE=Button;
+P1REN= Button;
+P1IES=Button;
+P1IFG=0x00;
+_enable_interrupts();
+LPM4;
+}
+#pragma vector = PORT1_VECTOR
+__interrupt void PORT1_ISR(void){
+    P1OUT=RedLED;
+    BCSCTL3 |= LFXT1S_2;
+    
+    WDTCTL=WDT_ARST_1000;
+    P1IFG=0x00;
+}
+
